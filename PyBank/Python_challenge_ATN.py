@@ -1,60 +1,82 @@
-f = open("PyBank/Resources/budget_data.csv","r")
-print (f.readline())
-print (f.readline())
-print (f.readline())
-print (f.readline())
+# * In this challenge, you are tasked with helping a small, rural town modernize its vote counting process.
+import os
+import csv
 
-    #set variables 
-x,y,z= "Date", "Profit", "Losses"
+filepath=r'C:\Users\Brad\Desktop\03-Python\PyBank\Resources\budget_data.csv'
+
+#set variables 
 months=0
 total_amounts=0
+avg_value=0
+biggest_profit_increase=0
+biggest_profit_decrease=0
+biggest_profit_increase_month=""
+biggest_profit_decrease_month=""
 
 #The net total amounts of "Profit/Losses" over the entire period
-for i in f:
+month_list = []
+profit_losses = []
+
+#search through csv file
+with open(filepath)as csvfile:
+    csvreader=csv.reader(csvfile)
+    #read header
+    header=next(csvreader)
+    first_month=next(csvreader)
     months=months+1
-    Anne=i.split(",")
-    total_amounts=total_amounts + int(Anne[1])
-print ("Profit/Losses")
-print(total_amounts)
+    total_amounts=total_amounts+float(first_month[1])
+    prior_month_totals=float(first_month[1])
 
-#how many months are in the dataset
-print("Months")
-print(months)
+#confirm file object
+    print(csvreader)
 
-#split out profit/losses
-z="Jan-2010,867884"
-print(Anne)
+#loop through rows
+    for row in csvreader:
+        months=months+1
+        total_amounts=total_amounts + int(row[1])
+        month_list.append(row[0])
+        profit_losses.append(int(row[1])-prior_month_totals)
 
-# Calculate the changes in "Profit/Losses" over the entire period, then find the average of those changes; by month (i.e. Februrary-January)
-# Look for largest and smallest value within
-print(df)
-column_name="Profit"
-print(column_sum)
+        #Track the net change
+        current_difference=int(row[1]) - prior_month_totals
+        prior_month_totals=int(row[1])
 
-print(df)
-column_name="Losses"
-print(column_sum)
+        #find the biggest profit change
+        if (current_difference > biggest_profit_increase):
+            biggest_profit_increase = current_difference #if index = 2, then current_difference =66264
+            biggest_profit_increase_month= row[0]
 
-Date= str(budget_data[0])
-Profit=int(budget_data[1])
-Losses=int(budget_data[2])
+        if (current_difference < biggest_profit_decrease):
+            biggest_profit_decrease = current_difference 
+            biggest_profit_decrease_month=row[0]
+#Change value
+    avg_value=sum(profit_losses)/len(profit_losses)
 
-monthly_total_profit=(profit sum
-monthly_total_losses=(losses sum
-monthly_change= (profit-losses) 
-profit_percent_change=(profits/ monthly_total_profit)*100
-losses_percent-change=(losses/monthly_total_losses) *100
+f"Financial Analysis\n ==============="
 
-def subtract(1-2):
-    return 1-2
-answer=subtract(x,x)
-    print(answer)
+f"Total Months: ${months}"
 
+f"Total: ${total_amounts:.2f}"
 
-# The greatest increase in profits (date and amount) over the entire period
-print(f"x for [Date]")
-print (f"x for [Amount]")
+f"Average Change: ${avg_value:.2f}"
 
-# The greatest decrease in losses (date and amount) over the entire period
-print(f"x for [Date]")
-print (f"x for [Amount]")
+f"Greatest increase in profit: {biggest_profit_increase_month} ${biggest_profit_increase}"
+
+f"Greatest decrease in profit: {biggest_profit_decrease_month} ${biggest_profit_decrease}"
+
+text_file=(
+f"Financial Analysis\n ===============\n"
+
+f"Total Months: ${months}\n"
+
+f"Total: ${total_amounts:.2f}\n"
+
+f"Average Change: ${avg_value:.2f}\n"
+
+f"Greatest increase in profit: {biggest_profit_increase_month} ${biggest_profit_increase}\n"
+f"Greatest decrease in profit: {biggest_profit_decrease_month} ${biggest_profit_decrease}\n")
+
+print (text_file)
+
+with open("PyBank\Resources\Pybank_ATN.txt","w") as csvfile:
+    csvfile.write(text_file)
